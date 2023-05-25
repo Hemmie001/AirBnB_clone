@@ -4,6 +4,7 @@ Class BaseModel
 Definitions
 """
 
+import JSON
 from datetime import datetime
 import models
 import uuid
