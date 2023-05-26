@@ -1,70 +1,77 @@
 #!/usr/bin/python3
 """
-BaseModel class that defines all common attributes/methods for other classes
+This BaseModel class defines the attributes/method of the other classes
+in this project
 """
-import uuid
+
 from datetime import datetime
 import models
+import uuid
 import json
 isoform_time = "%Y-%m-%dT%H:%M:%S.%f"
 
 
 class BaseModel:
     """
-        Summary: Definning the base class
-        from which the other classes will inherit
-        Attributes:
-            id -> Public instance attributes
-            created_at -> Public instance attributes
-            updated_at -> Public instance attributes
+    This BaseModel defines the base class from which other classes
+        will inherit the following  atributes:
+        id -> Public instance attributes
+        created_at -> Public instance attributes
+        updated_at -> Public instance attributes
     """
+
     def __init__(self, *args, **kwargs):
         """
-        Initialization of the object/instance attributes
+        This Initializes the following object/instance attributes
             id: contains the object's identification
             created_at: the datetime in which the object was created
             updated_at: the datetime in which the object was modified
         """
-        if kwargs is None or len(kwargs) == 0:
+        if kwargs:
+            for key, value in kwargs.items():
+                if key != "__class__":
+                    setattr(self, key, value)
+            if hasattr(self, "created_at") and type(self.created_at) is str:
+                self.created_at = datetime.strptime(kwargs["created_at"], time)
+            if hasattr(self, "updated_at") and type(self.updated_at) is str:
+                self.updated_at = datetime.strptime(kwargs["updated_at"], time)
+        else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
-            self.updated_at = datetime.now()
+            self.updated_at = self.created_at
             models.storage.new(self)
-        else:
-            for key, value in kwargs.items():
-                if key == "id":
-                    self.id = value
-                elif key == "created_at" or key == "updated_at":
-                    self.__dict__[key] = datetime.strptime(value, isoform_time)
-                elif key is "__class__":
-                    pass
-                elif key is not "__class__":
-                    self.__dict__[key] = value
+            models.storage.save()
 
     def __str__(self):
-        """ Writing the __str__ method """
-        return "[{}] ({}) {}".format(self.__class__.__name__,
-                                     self.id, self.__dict__)
+        """
+        This is a python method called when we use print/str.to convert
+        object into a string. here it Return the print/str
+        representation of the BaseModel instance
+        """
+        return "[{:s}] ({:s}) {}".format(self.__class__.__name__, self.id,
+                                         self.__dict__)
 
     def save(self):
-        """ Public instance methods:
-            updates the public instance attribute updated_at
-            with the current datetime
+        """
+        This Public instance methods, updates the public instance
+        attribute(updated_at) with the current datetime
         """
         self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
-        """ Public instance methods
-            returns a dictionary containing all keys/values
-            of __dict__ of the instance with self.__dict__
-            we are making a copy.
-            This method will be the first piece of the
-            serialization/deserialization process: create a dictionary
-            representation with “simple object type” of our BaseModel
         """
-        dic_BaseClass = self.__dict__.copy()
-        dic_BaseClass["__class__"] = self.__class__.__name__
-        dic_BaseClass["created_at"] = self.created_at.isoformat()
-        dic_BaseClass["updated_at"] = self.updated_at.isoformat()
-        return dic_BaseClass
+        This public instance methods updates and returns a returns a
+        dictionary containing all keys/values of __dict__ of the
+        instance with self.__dict__ we are making a copy. This
+        method will be the first piece of the serialization/
+        deserialization prcess which creates a dictionary
+        representation with a "simple object type” of our BaseModel
+        """
+        dict_class = self.__dict__.copy()
+        if "created_at" in dict_class:
+            dict_class["created_at"] = dict_class["created_at"].strftime(time)
+        if "updated_at" in dict_class:
+            dict_class["updated_at"] = dict_class["updated_at"].strftime(time)
+        dict_class["__class__"] = self.__class__.__name__
+        return dict_class
