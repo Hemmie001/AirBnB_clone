@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 """test module for class BaseModel"""
 
-import models
+import sys
+from models.base_model import BaseModel
+from models import storage
 import datetime
 import unittest
 
