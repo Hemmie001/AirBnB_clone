@@ -19,7 +19,12 @@ class BaseModel:
     """
 
     def __init__(self, *args, **kwargs):
-        """class constructor"""
+        """
+        This Initializes the following object/instance attributes
+            id: contains the object's identification
+            created_at: the datetime in which the object was created
+            updated_at: the datetime in which the object was modified
+        """
         if len(kwargs) > 0:
             for key, value in kwargs.items():
                 if key in ["created_at", "updated_at"]:
@@ -36,19 +41,31 @@ class BaseModel:
             models.storage.save()
 
     def __str__(self):
-        """custom __str__ method for BaseModel"""
+        """
+        This is a python method called when we use print/str.to convert
+        object into a string. here it Return the print/str
+        representation of the BaseModel instance
+        """
         return ("[{}] ({}) {}".format(self.__class__.__name__,
                                       self.id, self.__dict__))
 
     def save(self):
-        """updates updated_at with the current datetime"""
+        """
+        This Public instance methods, updates the public instance
+        attribute(updated_at) with the current datetime
+        """
         self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
-        """returns a dictionary containing all keys/values
-           of __dict__ of the instance"""
-
+        """
+        This public instance methods updates and returns a returns a
+        dictionary containing all keys/values of __dict__ of the
+        instance with self.__dict__ we are making a copy. This
+        method will be the first piece of the serialization/
+        deserialization prcess which creates a dictionary
+        representation with a "simple object type” of our BaseModel
+        """
         dict_ = dict(self.__dict__)
         dict_.update({"__class__": self.__class__.__name__,
                       "created_at": str(((self.created_at).isoformat())),
