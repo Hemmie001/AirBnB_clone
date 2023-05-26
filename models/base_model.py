@@ -4,13 +4,12 @@ Class BaseModel
 Definitions
 """
 
-<<<<<<< HEAD
-import json
-=======
->>>>>>> parent of 7366f22... added import JSON
+import JSON
 from datetime import datetime
 import models
 import uuid
+
+time = "%Y-%m-%dT%H:%M:%S.%f"
 
 
 class BaseModel:
