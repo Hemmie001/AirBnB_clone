@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-"""module of 'BaseModel' class"""
+"""
+This BaseModel class defines the attributes/method of the other classes
+in this project
+"""
 
 from uuid import uuid4
 from datetime import datetime
@@ -7,7 +10,13 @@ import models
 
 
 class BaseModel:
-    """Representation of a BaseModel"""
+    """
+    This BaseModel defines the base class from which other classes
+    will inherit the following  atributes:
+        id -> Public instance attributes
+        created_at -> Public instance attributes
+        updated_at -> Public instance attributes
+    """
 
     def __init__(self, *args, **kwargs):
         """class constructor"""
