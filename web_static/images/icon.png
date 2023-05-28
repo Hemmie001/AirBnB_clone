@@ -1,1 +1,1 @@
-curl https://s3.amazonaws.com/intranet-projects-files/holbertonschool-higher-level_programming+/268/icon.png -O images/icon.png
+curl https://s3.amazonaws.com/intranet-projects-files/holbertonschool-higher-level_programming+/268/icon.png -o images/icon.png
